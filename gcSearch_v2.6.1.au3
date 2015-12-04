@@ -2,7 +2,7 @@
 #AutoIt3Wrapper_Icon=gcSearch.ico
 #AutoIt3Wrapper_Res_Comment=ChemStation文件搜索工具
 #AutoIt3Wrapper_Res_Description=ChemStation文件搜索工具
-#AutoIt3Wrapper_Res_Fileversion=2.6.0.0
+#AutoIt3Wrapper_Res_Fileversion=2.6.1.0
 #AutoIt3Wrapper_Res_LegalCopyright=Jack Chen <jack.chen@iff.com>
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_Res_requestedExecutionLevel=asInvoker
@@ -63,7 +63,7 @@ AutoItSetOption("ExpandVarStrings", 1) ; use variables and macros inside strings
 AutoItSetOption("GUIResizeMode", $GUI_DOCKALL)
 
 Global Const $AppName = "gcSearch"
-Global Const $AppVer = "2.6" ; 程序版本
+Global Const $AppVer = "2.6.1" ; 程序版本
 Global Const $STDChromDir = @ScriptDir & "\STDChrom" ; 标准谱图文件夹
 Global Const $SettingsFile = @ScriptDir & "\" & $AppName & ".ini" ; 配置文件
 Global Const $IndexCacheFile = @ScriptDir & "\Cache.db"
@@ -319,8 +319,10 @@ If $IndexDirs <> "" And $AutoIndex = 1 Then
 	AdlibRegister("IndexNewFile", 10000)
 EndIf
 _SetRunOnStart() ; 设置注册表-开机自动运行
-If $CmdLine[0] = 0 Or $CmdLine[1] <> "-Hide" Then ; 开机自动运行快捷方式带－Hide参数，不显示主界面
-	GUISetState(@SW_SHOW, $hMainGUI)
+
+GUISetState(@SW_SHOW, $hMainGUI)
+If $CmdLine[0] > 0 And $CmdLine[1] = "-Hide" Then ; 开机自动运行快捷方式带－Hide参数，隐藏主界面
+	WinSetState($hMainGUI, "", @SW_HIDE)
 EndIf
 
 GUIRegisterMsg($WM_NOTIFY, "WM_NOTIFY")
@@ -778,6 +780,7 @@ EndFunc   ;==>_About
 
 ; 显示搜索窗口
 Func _ShowMainGUI()
+	;GUISetState(@SW_SHOW, $hMainGUI)
 	WinSetState($hMainGUI, "", @SW_SHOW)
 	WinActivate($hMainGUI)
 EndFunc   ;==>_ShowMainGUI
